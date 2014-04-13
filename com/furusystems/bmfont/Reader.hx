@@ -6,6 +6,11 @@ import haxe.io.BytesInput;
  * ...
  * @author Andreas Rønning
  */
+enum ReadStatus {
+	COMPLETE;
+	PROGRESS;
+	ERROR;
+}
 class Reader
 {
 	static var currentFont:FontDef = null;
@@ -14,15 +19,15 @@ class Reader
 		
 		input.position = 0;
 		if (input.readByte() != 66 || input.readByte() != 77 || input.readByte() != 70 || input.readByte() != 3) throw "Invalid bmfont file";
-		while (readBlock(input)) { }
+		while (readBlock(input) == PROGRESS) { }
 		
 		var out = currentFont;
 		currentFont = null;
 		return out;
 	}
 	
-	static function readBlock(input:BytesInput):Bool {
-		if (input.position == input.length) return false;
+	static function readBlock(input:BytesInput):ReadStatus {
+		if (input.position == input.length) return COMPLETE;
 		var id = input.readByte();
 		switch(id) {
 			case 1:
@@ -36,9 +41,9 @@ class Reader
 			case 5:
 				readKerningPairs(input, input.readInt32());
 			default:
-				return false;
+				return ERROR;
 		}
-		return true;
+		return PROGRESS;
 	}
 	
 	static function readKerningPairs(input:BytesInput, blockSize:Int) 
@@ -112,9 +117,7 @@ class Reader
 		currentFont.texWidth = input.readUInt16();
 		currentFont.texHeight = input.readUInt16();
 		currentFont.pageCount = input.readUInt16();
-		var bits = input.readByte();
-		
-		//currentFont.packed = bits & 7 //read bit 7 for packed, still not sure what "bit 7" means since 
+		currentFont.packed = input.readByte() & 1 > 0; 
 		currentFont.alphaChannel = input.readByte();
 		currentFont.redChannel = input.readByte();
 		currentFont.greenChannel = input.readByte();
@@ -129,13 +132,12 @@ class Reader
 		currentFont.size = input.readInt16();
 		
 		var bits = input.readByte();
-		//TODO: Why isn't this working right?
-		currentFont.smooth = bits & 1 > 0;
-		currentFont.unicode = bits & 2 > 0;
-		currentFont.italic = bits & 4 > 0;
-		currentFont.bold = bits & 8 > 0;
-		currentFont.fixedHeight = bits & 16 > 0;
-		//
+		currentFont.smooth = bits & 128 > 0; 
+		currentFont.unicode = bits & 64 > 0; 
+		currentFont.italic = bits & 32 > 0; 
+		currentFont.bold = bits & 16 > 0; 
+		currentFont.fixedHeight = bits & 8 > 0;
+		
 		currentFont.charSet = input.readByte();
 		currentFont.stretchH = input.readUInt16();
 		currentFont.aa = input.readByte();

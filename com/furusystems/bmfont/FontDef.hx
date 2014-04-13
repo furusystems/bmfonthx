@@ -37,6 +37,7 @@ class FontDef
 	public var greenChannel:Int;
 	public var blueChannel:Int;
 	public var charMap:Vector<CharacterDef>;
+	public var packed:Bool;
 
 	public function new() 
 	{
