@@ -1,0 +1,12 @@
+{
+  "name": "BMFontHX",
+  "url": "http://www.angelcode.com/products/bmfont/",
+  "license": "MIT",
+  "tags": [],
+  "description": "Haxe implementation of binary BMFont reader",
+  "version": "0.9.0",
+  "releasenote": "",
+  "contributors": ["Andreas Rønning"],
+  "dependencies": {
+  }
+}
