@@ -3,6 +3,14 @@ bmfonthx
 
 Haxe reader for the binary BMFont format (http://www.angelcode.com/products/bmfont/). Takes a BytesInput source and spits out a FontDef.
 
+Installation:  
+
+	haxelib install bmfonthx
+
+..or 
+
+	haxelib git bmfonthx https://github.com/furusystems/bmfonthx.git
+
 Basic usage:  
 
 	//neko
