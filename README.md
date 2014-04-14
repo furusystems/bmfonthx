@@ -1,7 +1,7 @@
 bmfonthx
 ========
 
-Haxe reader for the binary BMFont format (http://www.angelcode.com/products/bmfont/). Takes a BytesInput source and spits out a FontDef.
+Haxe reader for the binary BMFont format (http://www.angelcode.com/products/bmfont/). Takes a Bytes source and spits out a FontDef.
 
 Installation:  
 
@@ -14,9 +14,9 @@ Installation:
 Basic usage:  
 
 	//neko
-    var font = Reader.read(new BytesInput(File.read("myfont.fnt", true).readAll()));  
+    var font = Reader.read(File.read("myfont.fnt", true).readAll());  
     //lime & openfl
-    var font = Reader.read(new BytesInput(Assets.getBytes("assets/myfont.fnt")));  
+    var font = Reader.read(Assets.getBytes("assets/myfont.fnt"));  
   
 FontDef has a pageFileNames array of textures (usually local relative path to where the .fnt file is situated) and a charMap vector of CharacterDefs that you can look up with charCodes, and that's about as specific as it gets. The rest is just data: Apply at your leisure.
 
