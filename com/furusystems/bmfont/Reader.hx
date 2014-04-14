@@ -56,8 +56,7 @@ class Reader
 	
 	static function readKerningPairs(input:BytesInput, blockSize:Int) 
 	{
-		//var pairBytes = input.read(blockSize);
-		//var reader = new BytesInput(pairBytes);
+		
 		var target = input.position + blockSize;
 		while (input.position < target) {
 			readPair(input);
@@ -124,8 +123,6 @@ class Reader
 	static function readPages(input:BytesInput, blockSize:Int) 
 	{
 		var target = input.position + blockSize;
-		//var block = input.read(blockSize);
-		//var reader = new BytesInput(block);
 		var idx = 0;
 		currentFont.pageFileNames = new Array<String>();
 		while (input.position < target) {
