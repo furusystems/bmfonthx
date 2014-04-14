@@ -103,6 +103,8 @@ class Reader
 		char.y = input.readUInt16();
 		char.width = input.readUInt16();
 		char.height = input.readUInt16();
+		char.halfWidth = char.width >> 1;
+		char.halfHeight = char.height >> 1;
 		char.xOffset = input.readInt16();
 		char.yOffset = input.readInt16();
 		char.xAdvance = input.readInt16();

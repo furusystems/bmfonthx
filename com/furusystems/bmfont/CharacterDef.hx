@@ -9,7 +9,9 @@ class CharacterDef {
 	public var x:Int;
 	public var y:Int;
 	public var width:Int;
+	public var halfWidth:Int;
 	public var height:Int;
+	public var halfHeight:Int;
 	public var xOffset:Int;
 	public var yOffset:Int;
 	public var xAdvance:Int;
