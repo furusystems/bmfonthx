@@ -5,7 +5,7 @@ package com.furusystems.bmfont;
  * @author Andreas Rønning
  */
 class CharacterDef {
-	public var id:Int;
+	public var id:UInt;
 	public var x:Int;
 	public var y:Int;
 	public var width:Int;

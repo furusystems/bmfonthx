@@ -1,6 +1,8 @@
 package com.furusystems.bmfont;
 import haxe.ds.Vector.Vector;
+import haxe.io.Bytes;
 import haxe.io.BytesInput;
+import sys.io.FileInput;
 
 /**
  * ...
@@ -13,16 +15,22 @@ enum ReadStatus {
 }
 class Reader
 {
+	static var bytes:Bytes;
 	static var currentFont:FontDef = null;
-	public static function read(input:BytesInput):FontDef {
+	public static function read(bytes:Bytes):FontDef {
+		
+		Reader.bytes = bytes;
+		var input = new BytesInput(bytes);
 		currentFont = new FontDef();
 		
 		input.position = 0;
-		if (input.readByte() != 66 || input.readByte() != 77 || input.readByte() != 70 || input.readByte() != 3) throw "Invalid bmfont file";
+		if (input.readByte() != 66 || input.readByte() != 77 || input.readByte() != 70) throw "Invalid bmfont file";
+		if (input.readByte() != 3) throw "Invalid bmfont file version";
 		while (readBlock(input) == PROGRESS) { }
 		
 		var out = currentFont;
 		currentFont = null;
+		Reader.bytes = null;
 		return out;
 	}
 	
@@ -48,10 +56,11 @@ class Reader
 	
 	static function readKerningPairs(input:BytesInput, blockSize:Int) 
 	{
-		var pairBytes = input.read(blockSize);
-		var reader = new BytesInput(pairBytes);
-		while (reader.position < reader.length) {
-			readPair(reader);
+		//var pairBytes = input.read(blockSize);
+		//var reader = new BytesInput(pairBytes);
+		var target = input.position + blockSize;
+		while (input.position < target) {
+			readPair(input);
 		}
 	}
 	
@@ -68,27 +77,40 @@ class Reader
 	
 	static function readChars(input:BytesInput, blockSize:Int) 
 	{
+		var target = input.position + blockSize;
 		currentFont.charMap = new Vector<CharacterDef>(256);
-		var charBytes = input.read(blockSize);
-		var reader = new BytesInput(charBytes);
-		while (reader.position < reader.length) {
-			readChar(reader);
+		var numChars = blockSize / 20;
+		var charIdx = 0;
+		while (charIdx++<numChars) {
+			readChar(input);
 		}
 	}
+	
+	static public function readUnsignedInt(input:BytesInput):Int 
+	{
+		var ch1 = input.readByte();
+		var ch2 = input.readByte();
+		var ch3 = input.readByte();
+		var ch4 = input.readByte();
+
+		return input.bigEndian ?(ch1 << 24) |(ch2 << 16) |(ch3 << 8) | ch4 : (ch4 << 24) |(ch3 << 16) |(ch2 << 8) | ch1;
+	}
+	
 	static function readChar(input:BytesInput) {
 		var char = new CharacterDef();
-		char.id = input.readUInt24();
+		char.id = readUnsignedInt(input);
 		
 		char.x = input.readUInt16();
 		char.y = input.readUInt16();
 		char.width = input.readUInt16();
 		char.height = input.readUInt16();
-		char.xOffset = input.readInt8();
-		char.yOffset = input.readInt8();
-		char.xAdvance = input.readInt8();
+		char.xOffset = input.readInt16();
+		char.yOffset = input.readInt16();
+		char.xAdvance = input.readInt16();
 		
 		char.page = input.readByte();
 		char.channel = input.readByte();
+		
 		currentFont.charMap[char.id] = char;
 	}
 	
@@ -101,12 +123,13 @@ class Reader
 	
 	static function readPages(input:BytesInput, blockSize:Int) 
 	{
-		var block = input.read(blockSize);
-		var reader = new BytesInput(block);
+		var target = input.position + blockSize;
+		//var block = input.read(blockSize);
+		//var reader = new BytesInput(block);
 		var idx = 0;
 		currentFont.pageFileNames = new Array<String>();
-		while (reader.position < reader.length) {
-			currentFont.pageFileNames[idx++] = readZeroTerminatedString(reader);
+		while (input.position < target) {
+			currentFont.pageFileNames[idx++] = readZeroTerminatedString(input);
 		}
 	}
 	
