@@ -1,7 +1,7 @@
 bmfonthx
 ========
 
-Haxe reader for the binary BMFont format (http://www.angelcode.com/products/bmfont/). Takes a Bytes source and spits out a FontDef.
+Haxe reader for the BMFont format (http://www.angelcode.com/products/bmfont/). Takes a Bytes or String source and spits out a FontDef.
 
 Installation:  
 
