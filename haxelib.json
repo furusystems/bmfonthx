@@ -4,9 +4,8 @@
   "license": "MIT",
   "tags": ["cross","game"],
   "description": "Haxe implementation of binary BMFont reader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "releasenote": "",
   "contributors": ["Sunjammer"],
-  "dependencies": {
-  }
+  "dependencies": {}
 }

@@ -27,8 +27,8 @@ class FontDef
 	public var spacingHorizontal:Int;
 	public var spacingVertical:Int;
 	public var outline:Int;
-	public var lineHeight:Int;
-	public var base:Int;
+	public var lineHeight:Float;
+	public var base:Float;
 	public var texWidth:Int;
 	public var texHeight:Int;
 	public var pageCount:Int;
