@@ -43,6 +43,7 @@ class Reader
 	
 	//{ string
 	static function readLine(str:String):Void {
+		str = StringTools.trim(str);
 		var token = str.split(" ").shift();
 		switch(token) {
 			case "info":
